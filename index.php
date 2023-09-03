@@ -7,7 +7,7 @@
 
 <?php include_once "header.php"; ?>
 <body>
-  <div class="wrapper">
+  <div class="miniwrapper">
     <section class="form signup">
       <header>Realtime Chat App</header>
       <form action="#" method="POST" enctype="multipart/form-data" autocomplete="off">
