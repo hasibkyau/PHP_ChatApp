@@ -2,7 +2,6 @@
 
 <body>
   <div class="container">
-
     <div class="wrapper">
       <section class="users">
         <header>
@@ -53,11 +52,10 @@
 
 
         <form class="form-inline" action="#" method="POST" enctype="multipart/form-data" autocomplete="off">
-          <div class="form-group mx-sm-3 mb-2">
-            <label for="inputPassword2" class="sr-only">New Contact</label>
-            <input id="contact_number" type="text" class="form-control" name="contact_number" placeholder="New Contact">
-          </div>
-          <button type="submit" class="btn btn-primary mb-2">Add to Chat</button>
+          <button type="users" class="btn btn-primary mb-2">User List</button>
+          <button type="pending" class="btn btn-primary mb-2">New Users</button>
+          <button type="active" class="btn btn-primary mb-2">Active Users</button>
+          <button type="chat" class="btn btn-primary mb-2">Chat History</button>
         </form>
 
 
@@ -73,7 +71,7 @@
           <?php
           $user = $_SESSION['unique_id'];
 
-          $sql = "SELECT * FROM contact_list WHERE contact_owner = {$_SESSION['unique_id']} ORDER BY contact_id DESC";
+          $sql = "SELECT * FROM contact_list ORDER BY contact_id DESC";
           $query = mysqli_query($conn, $sql);
           $output = "";
           if (mysqli_num_rows($query) == 0) {
@@ -85,6 +83,10 @@
           OR receiver = {$row['contact_id']}) ORDER BY msg_id DESC LIMIT 1";
               $query2 = mysqli_query($conn, $sql2);
               $row2 = mysqli_fetch_assoc($query2);
+              $activeStatus = 'unseen';
+              if($row2['status']=='seen'){
+                $activeStatus = 'seen';
+              }
 
               if (isset($row2['sender'])) {
                 ($user == $row2['sender']) ? $you = "You: " : $you = "";
@@ -98,8 +100,8 @@
               (strlen($result) > 28) ? $msg = substr($result, 0, 28) . '...' : $msg = $result;
               // ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
               ($user == $row['contact_owner']) ? $hid_me = "hide" : $hid_me = "";
-
-              $output .= '<a href="chat.php?contact_id=' . $row['contact_id'] . '">
+              
+              $output .= '<a href="adminChat.php?contact_id=' . $row['contact_id'] . '">
             <div class="content">
               <img src="php/images/' . $row['img'] . '" alt="">
               <div class="details">

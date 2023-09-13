@@ -1,4 +1,8 @@
-<?php include_once "header.php"; ?>
+<?php 
+session_start();
+include_once "../php/config.php";
+include_once "header.php"; 
+?>
 
 <body>
   <div class="container">
@@ -13,7 +17,7 @@
               $row = mysqli_fetch_assoc($sql);
             }
             ?>
-            <img src="php/images/<?php echo $row['img']; ?>" alt="">
+            <img src="../php/images/<?php echo $row['img']; ?>" alt="">
             <div class="details">
               <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
               <p><?php echo $row['status']; ?></p>
@@ -22,42 +26,14 @@
           <a href="php/logout.php?logout_id=<?php echo $row['unique_id']; ?>" class="logout">Logout</a>
         </header>
 
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-          $contact_number = $_POST['contact_number'];
-          $contact_owner = $_SESSION['unique_id'];
-
-          if (!empty($contact_owner)) {
-            // Check if username or email already exist in the database
-            $existingEmailQuery = "SELECT * FROM contact_list WHERE contact_owner = '$contact_owner' AND contact_number = '$contact_number'";
-
-            $existingEmailResult = $conn->query($existingEmailQuery);
-
-            if ($existingEmailResult->num_rows > 0) {
-              echo "<p>Contact number is already added. Please use a different contact.</p>";
-            } else {
-              // Insert user information into the database
-              $insertQuery = "INSERT INTO contact_list (contact_owner, contact_number) VALUES ('$contact_owner', '$contact_number')";
-              if ($conn->query($insertQuery) === TRUE) {
-                //echo "<p>Registration successful! You will receive a confirmation email soon.</p>";
-                header("Location: users.php"); // Redirect to chat page
-              } else {
-                echo "<p>Error: Failed to add contact. Please try again later.</p>";
-              }
-            }
-          } else {
-            echo "<p>Error: Failed to add contact. Please try again later.</p>";
-          }
-        }
-        ?>
+   
 
 
         <form class="form-inline" action="#" method="POST" enctype="multipart/form-data" autocomplete="off">
-          <div class="form-group mx-sm-3 mb-2">
-            <label for="inputPassword2" class="sr-only">New Contact</label>
-            <input id="contact_number" type="text" class="form-control" name="contact_number" placeholder="New Contact">
-          </div>
-          <button type="submit" class="btn btn-primary mb-2">Add to Chat</button>
+        <button type="submit" class="btn btn-primary m-2">All Users</button>  
+        <button type="submit" class="btn btn-primary m-2">New Users</button>
+          <button type="submit" class="btn btn-primary m-2">Active Users</button>
+          <button type="submit" class="btn btn-primary m-2">Chat History</button>
         </form>
 
 
@@ -72,8 +48,7 @@
         <div class="users-list">
           <?php
           $user = $_SESSION['unique_id'];
-
-          $sql = "SELECT * FROM contact_list WHERE contact_owner = {$_SESSION['unique_id']} ORDER BY contact_id DESC";
+          $sql = "SELECT * FROM contact_list ORDER BY contact_id DESC";
           $query = mysqli_query($conn, $sql);
           $output = "";
           if (mysqli_num_rows($query) == 0) {
@@ -99,9 +74,9 @@
               // ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
               ($user == $row['contact_owner']) ? $hid_me = "hide" : $hid_me = "";
 
-              $output .= '<a href="chat.php?contact_id=' . $row['contact_id'] . '">
+              $output .= '<a href="../chat.php?contact_id=' . $row['contact_id'] . '">
             <div class="content">
-              <img src="php/images/' . $row['img'] . '" alt="">
+              <img src="../php/images/' . $row['img'] . '" alt="">
               <div class="details">
                 <span>' . $row['contact_number'] . '</span>
                 <p>' . $you . $msg . '</p>

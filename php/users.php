@@ -3,6 +3,10 @@
 session_start();
 include_once "config.php";
 $user = $_SESSION['unique_id'];
+
+if($user = "950795655"){
+    header("location: dashboard.php");
+}
 $sql = "SELECT * FROM contact_list WHERE contact_owner = {$user} ORDER BY contact_id DESC";
 $query = mysqli_query($conn, $sql);
 $output = "";
@@ -18,13 +22,14 @@ if (mysqli_num_rows($query) == 0) {
 
         if(isset($row2['sender'])){
             ($user == $row2['sender']) ? $you = "You: " : $you = "";
-            ($user == $row2['sender']) ? $seen =" " : $seen = ' (' . $row2['status'] . ')';
+           // ($user == $row2['sender']) ? $seen =" " : $seen = ' (' . $row2['status'] . ')';
         }else{
             $you = "";
         }
 
         (mysqli_num_rows($query2) > 0) ? $result = $row2['msg'] : $result ="No message available";
-        (strlen($result) > 28) ? $msg =  substr($result, 0, 28) . '...' . $seen : $msg = $result. $seen ;
+        // (strlen($result) > 28) ? $msg =  substr($result, 0, 28) . '...' . $seen : $msg = $result. $seen ;
+        (strlen($result) > 28) ? $msg =  substr($result, 0, 28) . '...' : $msg = $result ;
         // ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
         ($user == $row['contact_owner']) ? $hid_me = "hide" : $hid_me = "";
 

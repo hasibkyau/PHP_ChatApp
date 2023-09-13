@@ -6,11 +6,6 @@ if (!isset($_SESSION['unique_id'])) {
     header("location: login.php");
 }
 include_once "header.php";
-
-$user = $_SESSION['unique_id'];
-if($user == "950795655"){
-  header("Location: admin.php");
-}
 ?>
 
 
@@ -24,7 +19,7 @@ if($user == "950795655"){
 
     <div class="row">
       <div class="col-6">
-      <?php include_once "sidebar.php"; ?>
+      <?php include_once "adminbar.php"; ?>
       </div>
 
       <div class="col-6">

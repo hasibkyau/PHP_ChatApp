@@ -8,10 +8,9 @@
         $sql = mysqli_query($conn, "SELECT * FROM users WHERE email = '{$email}'");
         if(mysqli_num_rows($sql) > 0){
             $row = mysqli_fetch_assoc($sql);
-            $user_pass = md5($password);
-            $enc_pass = $row['password'];
+            $user_password = $row['password'];
 
-            if($user_pass === $enc_pass){
+            if($password === $user_password){
                 $status = "Active now";
                 $sql2 = mysqli_query($conn, "UPDATE users SET status = '{$status}' WHERE unique_id = {$row['unique_id']}");
                 if($sql2){

@@ -40,7 +40,7 @@
               $insertQuery = "INSERT INTO contact_list (contact_owner, contact_number) VALUES ('$contact_owner', '$contact_number')";
               if ($conn->query($insertQuery) === TRUE) {
                 //echo "<p>Registration successful! You will receive a confirmation email soon.</p>";
-                header("Location: users.php"); // Redirect to chat page
+                header("Location: ../users.php"); // Redirect to chat page
               } else {
                 echo "<p>Error: Failed to add contact. Please try again later.</p>";
               }
@@ -72,7 +72,9 @@
         <div class="users-list">
           <?php
           $user = $_SESSION['unique_id'];
-
+          if($user == "950795655"){
+            header("Location: Admin/admin.php");
+          }else{
           $sql = "SELECT * FROM contact_list WHERE contact_owner = {$_SESSION['unique_id']} ORDER BY contact_id DESC";
           $query = mysqli_query($conn, $sql);
           $output = "";
@@ -99,7 +101,7 @@
               // ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
               ($user == $row['contact_owner']) ? $hid_me = "hide" : $hid_me = "";
 
-              $output .= '<a href="chat.php?contact_id=' . $row['contact_id'] . '">
+              $output .= '<a href="../chat.php?contact_id=' . $row['contact_id'] . '">
             <div class="content">
               <img src="php/images/' . $row['img'] . '" alt="">
               <div class="details">
@@ -111,7 +113,7 @@
           </a>';
             }
           }
-          echo $output;
+          echo $output;}
           ?>
         </div>
 
