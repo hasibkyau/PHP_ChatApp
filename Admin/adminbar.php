@@ -1,8 +1,7 @@
-<?php include_once "header.php"; ?>
+<?php include_once "../header.php"; ?>
 
 <body>
   <div class="container">
-
     <div class="wrapper">
       <section class="users">
         <header>
@@ -13,20 +12,22 @@
               $row = mysqli_fetch_assoc($sql);
             }
             ?>
-            <img src="php/images/<?php echo $row['img']; ?>" alt="">
+            <img src="../php/images/<?php echo $row['img']; ?>" alt="">
             <div class="details">
               <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
               <p><?php echo $row['status']; ?></p>
             </div>
           </div>
-          <a href="php/logout.php?logout_id=<?php echo $row['unique_id']; ?>" class="logout">Logout</a>
+          <a href="../php/logout.php?logout_id=<?php echo $row['unique_id']; ?>" class="logout">Logout</a>
         </header>
 
         <?php
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
           $contact_number = $_POST['contact_number'];
-          $contact_owner = $_SESSION['unique_id'];
-
+          $ownerQuery = mysqli_query($conn, "SELECT * FROM contact_list WHERE contact_number = $contact_number");
+          $ownerRow = mysqli_fetch_assoc($ownerQuery);
+          $contact_owner = $ownerRow['contact_owner'];
+          
           if (!empty($contact_owner)) {
             // Check if username or email already exist in the database
             $existingEmailQuery = "SELECT * FROM contact_list WHERE contact_owner = '$contact_owner' AND contact_number = '$contact_number'";
@@ -52,13 +53,11 @@
         ?>
 
 
-        <form class="form-inline" action="#" method="POST" enctype="multipart/form-data" autocomplete="off">
-          <div class="form-group mx-sm-3 mb-2">
-            <label for="inputPassword2" class="sr-only">New Contact</label>
-            <input id="contact_number" type="text" class="form-control" name="contact_number" placeholder="New Contact">
-          </div>
-          <button type="submit" class="btn btn-primary mb-2">Add to Chat</button>
-        </form>
+       
+        <a href="newUsers.php" class="btn btn-primary mb-2">NewUsers</a>
+          <button class="btn btn-primary mb-2">Active Users</button>
+          <button class="btn btn-primary mb-2">Chat History</button>
+
 
 
         <div class="search">
@@ -72,10 +71,8 @@
         <div class="users-list">
           <?php
           $user = $_SESSION['unique_id'];
-          if($user == "950795655"){
-            header("Location: Admin/admin.php");
-          }else{
-          $sql = "SELECT * FROM contact_list WHERE contact_owner = {$_SESSION['unique_id']} ORDER BY contact_id DESC";
+
+          $sql = "SELECT * FROM contact_list ORDER BY contact_id DESC";
           $query = mysqli_query($conn, $sql);
           $output = "";
           if (mysqli_num_rows($query) == 0) {
@@ -87,7 +84,6 @@
           OR receiver = {$row['contact_id']}) ORDER BY msg_id DESC LIMIT 1";
               $query2 = mysqli_query($conn, $sql2);
               $row2 = mysqli_fetch_assoc($query2);
-
               if (isset($row2['sender'])) {
                 ($user == $row2['sender']) ? $you = "You: " : $you = "";
                 // ($user == $row2['sender']) ? $seen =" " : $seen = ' (' . $row2['status'] . ')';
@@ -100,12 +96,20 @@
               (strlen($result) > 28) ? $msg = substr($result, 0, 28) . '...' : $msg = $result;
               // ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
               ($user == $row['contact_owner']) ? $hid_me = "hide" : $hid_me = "";
+              $image = "unseen.jpg";
+              $button = "<button type='seen' class='btn mx-2 btn-sm btn-danger mb-2'>Seen</button>";
 
-              $output .= '<a href="../chat.php?contact_id=' . $row['contact_id'] . '">
+              if($row['seen']==true){
+                $image = "seen.png";
+                $button = "<button type='unseen' class='btn mx-2 btn-sm btn-primary mb-2'>Unseen</button>";
+              }
+              $output .= '<a href="adminChat.php?contact_id=' . $row['contact_id'] . '">
             <div class="content">
-              <img src="php/images/' . $row['img'] . '" alt="">
+              <img src="../php/images/' . $image . '" alt="">
               <div class="details">
-                <span>' . $row['contact_number'] . '</span>
+                <form class="form-inline" action="#" method="SEEN" enctype="multipart/form-data" autocomplete="off">
+                <span>' . $row['contact_number'] . '</span>'.$button.'
+                </form>
                 <p>' . $you . $msg . '</p>
               </div>
             </div>
@@ -113,7 +117,7 @@
           </a>';
             }
           }
-          echo $output;}
+          echo $output;
           ?>
         </div>
 
@@ -122,7 +126,7 @@
 
   </div>
 
-  <script src="javascript/users.js"></script>
+  <script src="../javascript/users.js"></script>
 
 </body>
 

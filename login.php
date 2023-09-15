@@ -39,7 +39,7 @@ if (isset($_SESSION['unique_id'])) {
           <input type="submit" name="submit" value="Continue to Chat">
         </div>
       </form>
-      <div class="link">Not yet signed up? <a href="index.php">Signup now</a></div>
+      <div class="link">Not yet signed up? <a href="registration.php">Signup now</a></div>
     </section>
   </div>
 

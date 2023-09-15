@@ -9,7 +9,7 @@ include_once "header.php";
 
 $user = $_SESSION['unique_id'];
 if($user == "950795655"){
-  header("Location: admin.php");
+  header("Location: Admin/admin.php");
 }
 ?>
 

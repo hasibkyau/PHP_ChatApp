@@ -19,7 +19,7 @@ include_once "header.php";
 
     <div class="row">
       <div class="col-6">
-      <?php include_once "adminbar.php"; ?>
+      <?php include_once "newUsersBar.php"; ?>
       </div>
 
       <div class="col-6">
